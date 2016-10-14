@@ -1,6 +1,8 @@
+1.0
 Without paramiter without numbarign:
 <?php the_posts_navigation(); ?>
 
+2.0
 With paramiter without numbaring:
 <?php the_posts_navigation(array(
     'prev_text'         =>  'PREV',
@@ -8,11 +10,12 @@ With paramiter without numbaring:
     'screen_reader_text'=> '  ',
 )); ?>
 
+3.0
 Without paramiter with numbering:
 <?php the_posts_pagination(); ?>
 
+4.0
 with paramiter with numbering:
-
 <?php the_posts_pagination(array(
     'mid_size' => 2,
     'prev_text' => __( 'Newer', 'textdomain' ),
