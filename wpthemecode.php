@@ -9,7 +9,8 @@ Theme Name: Theme Name
 Theme URI: https://example.org/themes/themename/
 Author: the Example team
 Author URI: https://example.org/
-Description: Our 2015 default theme is clean, blog-focused, and designed for clarity. Version: 1.3
+Description: Our 2015 default theme is clean, blog-focused, and designed for clarity. 
+Version: 1.3
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: black, blue, gray, pink, purple, white, yellow, dark, ustom-background
@@ -33,11 +34,11 @@ height  = 900 px
 <?php
 function styles_scripts() {
 	
-  wp_enqueue_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), '1.0', 'all');
+  wp_enqueue_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), 'v1.0', 'all');
   wp_enqueue_style('stylesheet', get_stylesheet_uri());
   
   wp_enqueue_script('jquery');
-  wp_enqueue_script('bootstrap', get_template_directory_uri() . '/js/bootstrap.min.js', array('jquery'), '1.0', true);
+  wp_enqueue_script('bootstrap', get_template_directory_uri() . '/js/bootstrap.min.js', array('jquery'), 'v1.0', true);
   
 }
 add_action( 'wp_enqueue_scripts', 'styles_scripts' );
@@ -70,59 +71,44 @@ add_action('wp_footer', 'footer_extra_script', 30);
 --------------------------------------------------------------*/
 List of Features
 1.  Content Width
-2.  Automatic Feed Links
-3.  Custom Backgrounds
-4.  Custom Headers
+2.  Title Tag
+3.  Automatic Feed Links
+4.  Theme Markup
 5.  Post Thumbnails
-6.  Post Formats
-7.  Title Tag
-8.  Editor Style
-9.  Theme Markup
-10. Theme Logo
-11. Sidebars
-12. Navigation Menus
+6.  Theme Logo
+7.  Custom Headers
+8.  Custom Backgrounds
+9.  Post Formats
+10. Navigation Menus
+11. Editor Style
 
-<?php  // Content Width - 1
-if ( ! isset( $content_width ) ) {
-	$content_width = 600;
-}
-?>
+<?php
+function custom_theme_setup() {
 
-<?php // Custom Backgrounds - 3
-add_theme_support( 'custom-background' );
-
-// using args
-$defaults = array(
-	'default-color'          => '',
-	'default-image'          => '',
-	'default-repeat'         => '',
-	'default-position-x'     => '',
-	'default-attachment'     => '',
-	'wp-head-callback'       => '_custom_background_cb',
-	'admin-head-callback'    => '',
-	'admin-preview-callback' => ''
-);
-add_theme_support( 'custom-background', $defaults );
+    if ( ! isset( $content_width ) ) {              // Content Width - 1
+        $content_width = 600;
+    }
     
-$args = array(
-	'default-color' => '000000',
-	'default-image' => '%1$s/images/background.jpg',
-);
-add_theme_support( 'custom-background', $args );
+    add_theme_support( $feature, $arguments );      // Example For Every Theme Support
     
-?>
-<?php  // Custom Logo
-add_theme_support( 'custom-logo', array(
-	'height'      => 100,
-	'width'       => 400,
-	'flex-height' => true,
-	'flex-width'  => true,
-	'header-text' => array( 'site-title', 'site-description' ),
-) );
-?>
-<?php // Custom Header - 4
-in function.php
-$custom_header_args = array(
+    add_theme_support( 'title-tag' );               // Add Site Title In Browser Header
+    add_theme_support( 'automatic-feed-links' );    // Show RSS & Feed Links
+    add_theme_support( 'html5' );                   // Support All HTML5 Tag 
+    
+    add_theme_support( 'post-thumbnails' );
+    add_theme_support( 'post-thumbnails', array( 'post' ) );          // Posts only
+    add_theme_support( 'post-thumbnails', array( 'page' ) );          // Pages only
+    add_theme_support( 'post-thumbnails', array( 'post', 'movie' ) ); // Posts and Movies
+    
+    add_theme_support( 'custom-logo', array(        // Support Custom Logo With Various Argument
+        'height'      => 100,
+        'width'       => 400,
+        'flex-height' => true,
+        'flex-width'  => true,
+        'header-text' => array( 'site-title', 'site-description' ),
+    ) );
+    
+    add_theme_support( 'custom-header', array(   // Support Custom Header With Various Argument
     'default-image'          => get_template_directory_uri() . 'img/default-image.jpg',
     'random-default'         => false,
     'width'                  => 1000,
@@ -135,131 +121,34 @@ $custom_header_args = array(
     'wp-head-callback'       => '',
     'admin-head-callback'    => '',
     'admin-preview-callback' => '',
-);
-add_theme_support( 'custom-header', $custom_header_args );
-//    'flex-height' => true, and 'flex-width'  => true, will let the user skip the cropping step when they upload a new photo.
-//     'header-text' => false will remove the header text and the option to toggle it.
-
-// write below code in template to show header image
-<img alt="" src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>">
-?>
-
-/*--------------------------------------------------------------
-03.0 - Post Formats
---------------------------------------------------------------*/
-<?php add_theme_support( $feature, $arguments ); ?>
-<?php
-    
-$args = array(
-    ...
-    'supports' => array('title', 'editor', 'author', 'post-formats')
-); 
-register_post_type('book', $args);
-
-
-// in your theme single.php, page.php or custom post type
-if ( has_post_format( 'quote' ) ) {
-	echo 'This is a quote.';
-}
-
-the_post_thumbnail();
-
-if ( has_post_thumbnail() ) {
-	the_post_thumbnail();
-}
-
-?>
-<?php
-function custom_theme_setup() {
-    
-	add_theme_support( $feature, $arguments );     // Example For Every Theme Support
-    add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat' ) );  // Support Various Post Format
-    add_post_type_support( 'page', 'post-formats' );    // add post-formats to post_type 'page'
-    add_post_type_support( 'my_custom_post_type', 'post-formats' ); // add post-formats to post_type 'my_custom_post_type'
-    add_theme_support( 'title-tag' );               // Add Site Title In Browser Header
-    add_theme_support( 'automatic-feed-links' );    // Show RSS & Feed Links
-    add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption' ) ); // Support Specific HTML5 Tag 
-    add_theme_support( 'html5' );                   // Support All HTML5 Tag 
-    add_theme_support( 'custom-logo' );             // Support Custom Logo
-    add_theme_support( 'custom-logo', array(        // Support Custom Logo With Various Argument
-        'height'      => 100,
-        'width'       => 400,
-        'flex-height' => true,
-        'flex-width'  => true,
-        'header-text' => array( 'site-title', 'site-description' ),
     ) );
     
-    add_theme_support( 'custom-header' );           // Support Custom Header
-    add_theme_support( 'custom-header', $defaults );// Support Custom Header With Various Argument
-    $defaults = array(
-        'default-image'          => '',
-        'random-default'         => false,
-        'width'                  => 0,
-        'height'                 => 0,
-        'flex-height'            => false,
-        'flex-width'             => false,
-        'default-text-color'     => '',
-        'header-text'            => true,
-        'uploads'                => true,
-        'wp-head-callback'       => '',
-        'admin-head-callback'    => '',
-        'admin-preview-callback' => '',
-    );
+    <img alt="" src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>">
     
-    add_theme_support( 'custom-background' );           // Support Custom Background
-    add_theme_support( 'custom-background', $defaults );// Support Custom Background With Various Arguments
-    $defaults = array(
-        'default-color'          => '',
-        'default-image'          => '',
-        'wp-head-callback'       => '_custom_background_cb',
-        'admin-head-callback'    => '',
-        'admin-preview-callback' => ''
-    );
-    add_theme_support( 'post-thumbnails' );
-    add_theme_support( 'post-thumbnails', array( 'post' ) );          // Posts only
-    add_theme_support( 'post-thumbnails', array( 'page' ) );          // Pages only
-    add_theme_support( 'post-thumbnails', array( 'post', 'movie' ) ); // Posts and Movies
+    add_theme_support( 'custom-background', array(
+	'default-color'          => '000000',
+	'default-image'          => '%1$s/images/background.jpg',
+	'default-repeat'         => '',
+	'default-position-x'     => '',
+	'default-attachment'     => '',
+	'wp-head-callback'       => '_custom_background_cb',
+	'admin-head-callback'    => '',
+	'admin-preview-callback' => ''
+    ) );// Support Custom Background With Various Arguments
+
+
+    add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat' ) );  // Support Various Post Format
+    
+    register_nav_menus( array(
+        'primary' => __( 'Primary Menu',      'twentyfifteen' ),
+        'social'  => __( 'Social Links Menu', 'twentyfifteen' ),
+    ) );
+
+
 }
-add_action( 'after_setup_theme', 'custom_theme_setup' );
-?>
-/*--------------------------------------------------------------
-03.0 - Custom Headers
---------------------------------------------------------------*/
-<?php
-function themename_custom_header_setup() {
-    $args = array(
-        'default-image'      => get_template_directory_uri() . 'img/default-image.jpg',
-        'default-text-color' => '000',
-        'width'              => 1000,
-        'height'             => 250,
-        'flex-width'         => true,
-        'flex-height'        => true,
-    );
-    add_theme_support( 'custom-header', $args );
-}
-add_action( 'after_setup_theme', 'themename_custom_header_setup' );
+add_action( 'after_setup_theme', 'custom_theme_setup' );   
 ?>
 
-<!--Show Custom Header Image-->
-<img alt="" src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" />
-    
-<?php
-$defaults = array(
-    'default-image'          => '',     // set default image
-    'random-default'         => false,
-    'width'                  => 0,      // set width for crop          
-    'height'                 => 0,      // set height for crop
-    'flex-height'            => false,  // true will allow to upload image without crop
-    'flex-width'             => false,  // true will allow to upload image without crop
-    'default-text-color'     => '',     // 
-    'header-text'            => true,
-    'uploads'                => true,
-    'wp-head-callback'       => '',
-    'admin-head-callback'    => '',
-    'admin-preview-callback' => '',
-);
-add_theme_support( 'custom-header', $defaults );
-?>
 
 /*--------------------------------------------------------------
 03.0 - Image Dynamic
@@ -277,59 +166,18 @@ the_post_thumbnail('post-thumb');
 
 <?php // call thumbnail image in HTML src to keep css classes well in img HTML tag 
 if (have_posts()) :
-   while (have_posts()) :
-      the_post(); 
+   while (have_posts()) : the_post(); 
         $page_thumb = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full' ); ?>
 
         <div class="row container-kamn"> 
             <img src="<?php echo $page_thumb[0]; ?>" width="100%" class="blog-post" alt="Feature-img" align="right"> 
         </div>
-        
     <?php
    endwhile;
 endif;
 ?>
 
-<?php
-if ( ! isset( $content_width ) ) {
-	$content_width = 660;
-}?>
-/*--------------------------------------------------------------
-04.0 - Default theme functions and features.
---------------------------------------------------------------*/
-<?php
-if ( ! function_exists( 'twentyfifteen_setup' ) ) :
-function twentyfifteen_setup() {
-	load_theme_textdomain( 'twentyfifteen', get_template_directory() . '/languages' );
-	add_theme_support( 'automatic-feed-links' );
-	add_theme_support( 'title-tag' );
-	add_theme_support( 'post-thumbnails' );
-	set_post_thumbnail_size( 825, 510, true );
-    add_image_size('post-thumb', 250, null, false );
-    add_image_size('single-post-thumb', 400, null, false );
-	add_theme_support( 'html5', array(
-		'search-form', 'comment-form', 'comment-list', 'gallery', 'caption'
-	) );
-	add_theme_support( 'post-formats', array(
-		'aside', 'image', 'video', 'quote', 'link', 'gallery', 'status', 'audio', 'chat'
-	) );
-	$color_scheme  = twentyfifteen_get_color_scheme();
-	$default_color = trim( $color_scheme[0], '#' );
-	add_theme_support( 'custom-background', apply_filters( 'twentyfifteen_custom_background_args', array(
-		'default-color'      => $default_color,
-		'default-attachment' => 'fixed',
-	) ) );
-    
-    register_nav_menus( array(
-    'primary' => __( 'Primary Menu',      'twentyfifteen' ),
-    'social'  => __( 'Social Links Menu', 'twentyfifteen' ),
-    ) );
-    
-	add_editor_style( array( 'css/editor-style.css', 'genericons/genericons.css', twentyfifteen_fonts_url() ) );
-}
-endif;
-add_action( 'after_setup_theme', 'twentyfifteen_setup' );
-?>
+
 /*--------------------------------------------------------------
 05.0 - Footer.php
 --------------------------------------------------------------*/
@@ -343,33 +191,24 @@ add_action( 'after_setup_theme', 'twentyfifteen_setup' );
 05.0 - Register menu
 --------------------------------------------------------------*/
 <?php // write below code in function.php file under after_setup_theme hook
-function register_menus() {
-  if (function_exists('register_nav_menus')) {
+    
+if (function_exists('register_nav_menus')) {
     register_nav_menus(array(
       'primary_menu'  => 'Primary Menu',
       'footer_menu'   => 'Footer Menu',
     ));
-  }
 }
-add_action( 'after_setup_theme', 'register_menus' );
-// write below code in functions.php to show menu as pages with current theme style when won't set menu
-function moderna_fallback() {
-  echo '<ul class="nav navbar-nav">';
-  if ('page' !=get_option('show_on_front')) {
-    echo '<li><a href=" ' . home_url( '/') . ' ">Home</a></li>';
-  }
-  wp_list_pages('title_li=');
-  echo '</ul>';
-}
+
+
 // write below code where you want to show menu
-  if (function_exists('wp_nav_menu')) {
+if (function_exists('wp_nav_menu')) {
     wp_nav_menu( array(
       'theme_location'		    => 'primary_menu',  	// Menu Name which is array key in function
       'container'				=> '',	                // Remove default DIV
       'menu_class'				=> 'nav navbar-nav',	// classes of <ul>
       'fallback_cb'				=> 'moderna_fallback',  // fallback functin name
       ));
-    }
+}
 ?>
 /*--------------------------------------------------------------
 03.0 - Archive.php
@@ -405,7 +244,7 @@ function moderna_fallback() {
 <?php
 function office_master_custom_post(){    
     register_post_type('service', array(
-        'labels'      =>array(
+        'labels'      =>    array(
             'name'          => 'Main Service',
             'menu_name'     => 'Services',
             'all_items'     => 'All Services',
@@ -413,19 +252,18 @@ function office_master_custom_post(){
             'add_new_item'  => 'Add New Service Item'
         ),
         'public'    => true,
-        'supports'  => array(
-            'title', 'revisions', 'custom-fields', 'page-attributes'
-        )
+        'supports'  => array( 'title', 'revisions', 'custom-fields', 'page-attributes' ),
     ));
 }
 add_action('init', 'office_master_custom_post');
 ?>
+
 <?php   // Service Item
 $service = null;
 $service = new WP_Query(array(
-'post_type'         => 'service',
-'posts_per_page'    => 6,
-'order'             =>  'ASC'
+    'post_type'         => 'service',
+    'posts_per_page'    => 6,
+    'order'             =>  'ASC',
 ));
 
 if ($service->have_posts())  {
@@ -449,10 +287,10 @@ $animation_type =       get_post_meta(get_the_ID(), 'animation_type',       true
     </div>
     <!-- End Service item -->
 
-    <?php
+<?php
 }
 }  else {
-"No Service Item";
+echo "No Service Item";
 }
 wp_reset_postdata();
 ?>             
@@ -830,8 +668,4 @@ Redux::setSection($opt_name, array(
 <a class="navbar-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
     <img src="<?php global $office_master; echo $office_master['site_logo']['url']; ?>" alt="">
 </a>
-
-
-
-
 ?>

@@ -39,3 +39,6 @@ add_action( 'init', 'themename_custom_post' );
         </div>
     </div>
 <?php endwhile; ?>
+
+<!-- Must be use below code after endwhile or endif -->
+<?php wp_reset_postdata(); ?>
