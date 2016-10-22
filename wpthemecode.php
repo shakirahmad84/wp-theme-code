@@ -23,18 +23,18 @@ Width   = 1200 px
 height  = 900 px
 
 /*--------------------------------------------------------------
-04.0 - Header.php
+02.0 - Header.php
 --------------------------------------------------------------*/
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a> // For dynamic Logo
 <?php bloginfo( 'description' ); ?>
 
 /*--------------------------------------------------------------
-07.0 - Enqueue css and js
+03.0 - Enqueue css and js
 --------------------------------------------------------------*/
 <?php
 function styles_scripts() {
 	
-  wp_enqueue_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', array(), 'v1.0', 'all');
+  wp_enqueue_style('bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css', null, 'v1.0', 'all');
   wp_enqueue_style('stylesheet', get_stylesheet_uri());
   
   wp_enqueue_script('jquery');
@@ -67,7 +67,7 @@ function footer_extra_script() { ?>
 add_action('wp_footer', 'footer_extra_script', 30);
 ?>
 /*--------------------------------------------------------------
-03.0 - Theme Features
+04.0 - Theme Features
 --------------------------------------------------------------*/
 List of Features
 1.  Content Width
@@ -140,8 +140,8 @@ function custom_theme_setup() {
     add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat' ) );  // Support Various Post Format
     
     register_nav_menus( array(
-        'primary' => __( 'Primary Menu',      'twentyfifteen' ),
-        'social'  => __( 'Social Links Menu', 'twentyfifteen' ),
+        'primary' => __( 'Primary Menu',      'textdomain' ),
+        'social'  => __( 'Social Links Menu', 'textdomain' ),
     ) );
 
 
@@ -151,12 +151,12 @@ add_action( 'after_setup_theme', 'custom_theme_setup' );
 
 
 /*--------------------------------------------------------------
-03.0 - Image Dynamic
+05.0 - Image Dynamic
 --------------------------------------------------------------*/
 <?php
 // functions.php
-add_theme_support('post-thumbnails');
-add_image_size('post-thumb', 600, 400, false );
+add_theme_support( 'post-thumbnails' );
+add_image_size( 'post-thumb', 600, 400, false );
 add_image_size( $name, $width = 0, $height = 0, $crop = false );
 ?>
 
@@ -179,39 +179,52 @@ endif;
 
 
 /*--------------------------------------------------------------
-05.0 - Footer.php
+06.0 - Footer.php
 --------------------------------------------------------------*/
-<p>&copy; <?php echo Date('Y'); ?> - <?php bloginfo('name'); ?></p>
+<p>&copy; <?php echo Date('Y'); ?> - <?php bloginfo( 'name' ); ?></p>
             
 <span class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></span>
             
 <a href="<?php echo esc_url( __( 'https://wordpress.org/', 'twentysixteen' ) ); ?>"><?php printf( __( 'Proudly powered by %s', 'twentysixteen' ), 'WordPress' ); ?></a>
 
 /*--------------------------------------------------------------
-05.0 - Register menu
+07.0 - Register menu
 --------------------------------------------------------------*/
 <?php // write below code in function.php file under after_setup_theme hook
-    
-if (function_exists('register_nav_menus')) {
+
+if (function_exists( 'register_nav_menus' )) {
     register_nav_menus(array(
       'primary_menu'  => 'Primary Menu',
       'footer_menu'   => 'Footer Menu',
     ));
 }
+?>
 
+<?php //Fallback Menu, add function name 'office_fallback_menu' to fallback_cb
+function office_fallback_menu() { ?>
+    <ul class="nav navbar-nav pull-right">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#"><span>Contact</span></a></li>
+    </ul>
+<?php 
+} 
+?>
 
-// write below code where you want to show menu
+<?php  // write below code where you want to show menu
 if (function_exists('wp_nav_menu')) {
     wp_nav_menu( array(
-      'theme_location'		    => 'primary_menu',  	// Menu Name which is array key in function
-      'container'				=> '',	                // Remove default DIV
-      'menu_class'				=> 'nav navbar-nav',	// classes of <ul>
-      'fallback_cb'				=> 'moderna_fallback',  // fallback functin name
-      ));
+      'theme_location'		    => 'primary_menu',  	    // Menu Name which is array key in function
+      'container'				=> '',	                    // Remove default DIV
+      'menu_class'				=> 'nav navbar-nav',	    // classes of <ul>
+      'fallback_cb'				=> 'office_fallback_menu',  // fallback functin name
+    ));
 }
 ?>
 /*--------------------------------------------------------------
-03.0 - Archive.php
+08.0 - Archive.php
 --------------------------------------------------------------*/
 <?php
     if(have_posts){
@@ -239,7 +252,7 @@ if (function_exists('wp_nav_menu')) {
 ?>
 
 /*--------------------------------------------------------------
-03.0 - Service Item
+09.0 - Service Item
 --------------------------------------------------------------*/
 <?php
 function office_master_custom_post(){    
@@ -296,7 +309,7 @@ wp_reset_postdata();
 ?>             
 
 /*--------------------------------------------------------------
-06.0 - Register widgets
+10.0 - Register widgets
 --------------------------------------------------------------*/
 <?php
 function register_widgets() {
@@ -321,7 +334,7 @@ add_action( 'widgets_init', 'register_widgets' );
 
 
 /*--------------------------------------------------------------
-08.0 - loop
+11.0 - loop
 --------------------------------------------------------------*/
 <?php if ( have_posts() ) : ?>
     <?php while ( have_posts() ) : the_post(); ?>
@@ -389,7 +402,7 @@ add_action( 'widgets_init', 'register_widgets' );
 <?php the_post_thumbnail(); ?>
 <?php the_excerpt(); ?>
 /*--------------------------------------------------------------
-08.0 - Register Slider
+12.0 - Register Slider
 --------------------------------------------------------------*/
 <?php  // Register Slider
     function register_slider_for_theme(){
@@ -464,7 +477,7 @@ add_action( 'widgets_init', 'register_widgets' );
         ?>
     </ol>
 /*--------------------------------------------------------------
-09.0 - Register custom post
+13.0 - Register custom post
 --------------------------------------------------------------*/
 <?php  // Add below code to functions.php to register custom post
 function ebit_custom_posts(){
@@ -559,23 +572,23 @@ function codex_book_init() {
 add_action( 'init', 'codex_book_init' );
 ?>
 /*--------------------------------------------------------------
-10.0 - WP_Query
+14.0 - WP_Query
 --------------------------------------------------------------*/
     
     
 /*--------------------------------------------------------------
-11.0 - Post Query by specific category
+15.0 - Post Query by specific category
 --------------------------------------------------------------*/
     
     
 /*--------------------------------------------------------------
-12.0 - Search Form
+16.0 - Search Form
 --------------------------------------------------------------*/
 <?php get_search_form(); ?>  // To get default wordwrap search form
 <?php add_theme_support('html5'); ?> // for support html5 to the form add to function.php file
 <h2><?php printf('Search Result for : %s', get_search_query() ); ?></h2> // To show your search keyword use above code out of loop
 /*--------------------------------------------------------------
-13.0 - Pagination
+17.0 - Pagination
 --------------------------------------------------------------*/
 <?php
 the_posts_pagination( array(
@@ -585,17 +598,117 @@ the_posts_pagination( array(
 ) );
 ?>
 /*--------------------------------------------------------------
-14.0 - Contact form
+18.0 - Contact form
 --------------------------------------------------------------*/
 /*--------------------------------------------------------------
-15.0 - Framework
+19.0 - Framework
 --------------------------------------------------------------*/
 /*--------------------------------------------------------------
-16.0 - Shortcode
+20.0 - Shortcode
 --------------------------------------------------------------*/
 /*--------------------------------------------------------------
-17.0 - Custom fields
+21.0 - Custom fields and CMB2
 --------------------------------------------------------------*/
+<?php
+// below variable Must be into Loop
+$service_icon  = get_post_meta( get_the_ID(), 'service_icon', true); 
+// to show
+echo $service_icon;
+
+// extract CMB2 in inc folder
+// name it CMB2
+// delete all files without bootstrap.php, example-functions.php, index.php & init.php
+// create a file in inc folder & name it cmb2.php & write below code into it
+if ( file_exists(  __DIR__ . '/cmb2/init.php' ) ) {
+  require_once  __DIR__ . '/cmb2/init.php';
+} elseif ( file_exists(  __DIR__ . '/CMB2/init.php' ) ) {
+  require_once  __DIR__ . '/CMB2/init.php';
+}
+// include to functions.php
+include_once('inc/cmb2.php');
+
+// Add below function to cmb2.php
+function office_master_cmb2(){
+    
+    $pref= '_office_'; // add a variable as prefix 
+    
+    // Initial
+    $service_item = new_cmb2_box( array(
+        'id'            => 'service_metabox',  // create a new id here as your wish
+        'title'         => __( 'Service Metabox', 'office' ),  // to show title of metabox
+        'object_types'  => array( 'service', ), // Post type
+        'context'       => 'normal',  // keep this as default
+        'priority'      => 'high',   // keep this as default
+        'show_names'    => true, // Show field names on the left
+    ) );
+    
+    // Regular text field
+    $service_item->add_field( array(
+        'name'       => __( 'Service Icon', 'office' ), // add Title
+        'desc'       => __( 'Write here your service icon font awesome name', 'office' ),  // Add Description
+        'id'         => $pref .'service_icon', // same id of your custom field variable
+        'type'       => 'text',
+    ) );
+    
+    // Regular text field
+    $service_item->add_field( array(
+        'name'       => __( 'Service Description', 'office' ), // add Title
+        'desc'       => __( 'Write here your service description font awesome name', 'office' ),  // Add Description
+        'id'         => $pref .'service_description', // same id of your custom field variable
+        'type'       => 'textarea',
+    ) );   
+    
+    ///////////////////////////////////// For Slider and Multy object to show one field in multy post type
+    // Initial
+    $slider_item = new_cmb2_box( array(
+        'id'            => 'slider_metabox',  // create a new id here as your wish
+        'title'         => __( 'Slider Metabox', 'office' ),  // to show title of metabox
+        'object_types'  => array( 'slider', 'service', 'page' ), // Post type
+        'context'       => 'normal',  // keep this as default
+        'priority'      => 'high',   // keep this as default
+        'show_names'    => true, // Show field names on the left
+    ) );
+    
+    // Regular text field
+    $slider_item->add_field( array(
+        'name'       => __( 'Slider Caption', 'office' ), // add Title
+        'desc'       => __( 'Write here your slider caption', 'office' ),  // Add Description
+        'id'         => $pref .'slider_caption', // same id of your custom field variable
+        'type'       => 'text',
+    ) );
+    
+    $special_page = new_cmb2_box( array(
+        'id'            => 'special_metabox',  // create a new id here as your wish
+        'title'         => __( 'Special Metabox', 'office' ),  // to show title of metabox
+        'object_types'  => array( 'page' ), // Post type
+        'show_on'       => array(
+            'key'   =>  'id',
+            'value' =>  '13',
+        ),
+        'context'       => 'normal',  // keep this as default
+        'priority'      => 'high',   // keep this as default
+        'show_names'    => true, // Show field names on the left
+    ) );
+    
+        // Regular text field
+    $special_page->add_field( array(
+        'name'       => __( 'Specia Meta Caption', 'office' ), // add Title
+        'desc'       => __( 'Write here your special slider caption', 'office' ),  // Add Description
+        'id'         => $pref .'special_page_caption', // same id of your custom field variable to show
+        'type'       => 'text',
+    ) );
+    
+}
+add_action( 'cmb2_admin_init', 'office_master_cmb2' );
+
+// change id name with frefix like below
+$service_icon  = get_post_meta( get_the_ID(), '_office_service_icon', true); 
+//or
+$pref = '_office_';
+$service_icon  = get_post_meta( get_the_ID(), $pref.'service_icon', true); 
+// For more fields
+// https://github.com/WebDevStudios/CMB2/wiki/Field-Types#types
+
 /*--------------------------------------------------------------
 18.0 - Custom metabox
 --------------------------------------------------------------*/
